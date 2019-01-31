@@ -12,6 +12,8 @@ DATASET_PATH = "../../Downloads/130000_Pop_Rock_Classical_Videogame_EDM_MIDI_Arc
 # This is the number of measures from the start of the files the program will parse
 NO_OF_MEASURES = 3
 
+
+
 # loop through all files
 for root, dirs, files in os.walk('./2-Parse-midi-files'):
     for file in files:
@@ -21,7 +23,9 @@ for root, dirs, files in os.walk('./2-Parse-midi-files'):
             arr = parseMidi(filename, NO_OF_MEASURES)
 
 
+createDataset(DATA)
 
 
 
-pprint("Done")
+
+print("Done")

@@ -2,9 +2,6 @@ from music21 import *
 from pprint import pprint
 from fractions import Fraction
 
-import numpy as np
-import glob
-
 
 # -------------MAIN FUNCTION--------------------
 def midiToNetworkInput(midi):

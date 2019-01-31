@@ -4,10 +4,12 @@
 # Import packages
 from music21 import *
 from pprint import pprint
-from fractions import Fraction
 
 import numpy as np
 import glob
+from multiprocessing import Process, Lock, Queue
+
+from midi_to_numpy import measureToList
 
 # Look at all the functions and attributes
 def printAttributesAndFunctions(object):
@@ -100,7 +102,7 @@ def writeToMidi(file, part, partCounter, noOfMeasures):
         pass
 
 
-def readMidi(score, filename):
+def readMidi(score, filename, output_filepath):
     # Loop through all the parts in the score
     # each part is the score for an instrument
 
@@ -108,7 +110,7 @@ def readMidi(score, filename):
 
     try:
         key = score.analyze('key')
-        if key.mode = 'minor':
+        if key.mode == 'minor':
             return
         score = transpose(midi)
     except:
@@ -133,7 +135,7 @@ def readMidi(score, filename):
             npArr = np.array(data[i])
             saveName = filename[filename.rfind("/")+1:-4] + str(i)
             print(f"Saving {saveName}.npy")
-            np.save(f"./numpyRepresentation/{saveName}", npArr)
+            np.save(f"{output_filepath}{saveName}", npArr)
             print(f" ✔️ : {saveName}.npy was saved")
             i+=1
     except:
@@ -202,21 +204,21 @@ def readMeasure(measure):
         return []
 
 
-def createDataset(location):
+def createDataset(input_filepath, output_filepath):
     # loop through all the midi files in the location
 
     work_queue = Queue()
 
     work_lock = Lock()
-    for file in glob.glob(f"{location}/**/*.mid", recursive=True):
+    for file in glob.glob(f"{input_filepath}/**/*.mid", recursive=True):
         work_queue.put(file)
 
     for i in range(4):
-        Process(target=run, args=(work_lock, work_queue)).start()
-
+        Process(target=run, args=(work_lock, work_queue, output_filepath)).start()
+        
     return
 
-def run(work_lock, work_queue):
+def run(work_lock, work_queue, output_filepath):
     while True:
         work_lock.acquire()
 
@@ -232,6 +234,6 @@ def run(work_lock, work_queue):
         except:
             break
 
-        readMidi(midi, file)
+        readMidi(midi, file, output_filepath)
 
     print("Finished")
