@@ -107,9 +107,12 @@ def readMidi(score, filename):
     print(f"Parsing {filename}")
 
     try:
+        key = score.analyze('key')
+        if key.mode = 'minor':
+            return
         score = transpose(midi)
     except:
-        continue
+        return
 
     try:
         data = []
