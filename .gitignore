@@ -2,3 +2,4 @@
 2-Parse-midi-files/numpyRepresentation/*
 2-Parse-midi-files/output/*
 2-Parse-midi-files/parsedDataset/*
+__pycache__/*
