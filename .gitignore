@@ -89,7 +89,6 @@ target/
 .mypy_cache/
 
 # ignore data files
-2-Parse-midi-files/data/*
-2-Parse-midi-files/numpyRepresentation/*
-2-Parse-midi-files/output/*
-2-Parse-midi-files/parsedDataset/*
+notebooks/2-Main/numpyRepresentation/*
+notebooks/2-Main/output/*
+notebooks/2-Main/parsedDataset/*
