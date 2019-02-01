@@ -213,9 +213,13 @@ def createDataset(input_filepath, output_filepath):
     for file in glob.glob(f"{input_filepath}/**/*.mid", recursive=True):
         work_queue.put(file)
 
-    for i in range(4):
-        Process(target=run, args=(work_lock, work_queue, output_filepath)).start()
-        
+
+    processes = [Process(target=run, args=(work_lock, work_queue, output_filepath)) for i in range(4)]
+    for p in processes:
+        p.start()
+
+    for p in processes:
+        p.join()
     return
 
 def run(work_lock, work_queue, output_filepath):
