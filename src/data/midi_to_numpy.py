@@ -1,6 +1,7 @@
 from music21 import *
 from pprint import pprint
 from fractions import Fraction
+import logging
 
 
 # -------------MAIN FUNCTION--------------------
@@ -14,6 +15,7 @@ def partToNetworkInput(part):
     return createNetworkInput(notes)
 
 def measureToList(measure):
+    logging.debug("measureToList")
     notes = getNotes(measure)
     return createNetworkInput(notes)
 
@@ -25,7 +27,9 @@ def noteToFloat(note):
     return note_to_float[note]
 
 def noteToInt(note):
-    note_to_int = ['rest', 'C6', 'C#6', 'D-6', 'D6', 'D#6', 'E-6', 'E6', 'F6', 'F#6', 'G-6', 'G6', 'G#6', 'A-6', 'A6', 'A#6', 'B-6', 'B6', 'C7', 'C#7', 'D-7', 'D7', 'D#7', 'E-7', 'E7', 'F7', 'F#7', 'G-7', 'G7', 'G#7', 'A-7', 'A7', 'A#7', 'B-7', 'B7', 'C8', 'C#8', 'D-8', 'D8', 'D#8', 'E-8', 'E8', 'F8', 'F#8', 'G-8', 'G8', 'G#8', 'A-8', 'A8', 'A#8', 'B-8', 'B8', 'C9']
+    logging.debug(f"Getting note {note} to Int")
+    note_to_int = ['rest', 'C4', 'C#4', 'D-4', 'D4', 'D#4', 'E-4', 'E4', 'F4', 'F#4', 'G-4', 'G4', 'G#4', 'A-4', 'A4', 'A#4', 'B-4', 'B4', 'C5', 'C#5', 'D-5', 'D5', 'D#5', 'E-5', 'E5', 'F5', 'F#5', 'G-5', 'G5', 'G#5', 'A-5', 'A5', 'A#5', 'B-5', 'B5', 'C6', 'C#6', 'D-6', 'D6', 'D#6', 'E-6', 'E6', 'F6', 'F#6', 'G-6', 'G6', 'G#6', 'A-6', 'A6', 'A#6', 'B-6', 'B6', 'C7', 'C#7', 'D-7', 'D7', 'D#7', 'E-7', 'E7', 'F7', 'F#7', 'G-7', 'G7', 'G#7', 'A-7', 'A7', 'A#7', 'B-7', 'B7', 'C8', 'C#8', 'D-8', 'D8', 'D#8', 'E-8', 'E8', 'F8', 'F#8', 'G-8', 'G8', 'G#8', 'A-8', 'A8', 'A#8', 'B-8', 'B8', 'C9']
+    logging.debug(f"noteToInt returns: {note_to_int.index(note)}")
     return note_to_int.index(note)
 
 def getDuration(note):
@@ -36,27 +40,38 @@ def getDuration(note):
         return duration
 
 def getDurationAsInt(note):
+    logging.debug("Getting duration as Int")
     duration_list = [0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.25, 5.5, 5.75, 6.0, 6.25, 6.5, 6.75, 7.0, 7.25, 7.5, 7.75, 8.0, 8.25, 8.5, 8.75, 9.0, 9.25, 9.5, 9.75, 10.0, 10.25, 10.5, 10.75, 11.0, 11.25, 11.5, 11.75, 12.0, 12.25, 12.5, 12.75, 13.0]
     if note.duration.quarterLengthNoTuplets not in duration_list:
         return None
+    logging.debug(f"getDurationAsInt returns: {duration_list.index(note.duration.quarterLengthNoTuplets)}")
     return duration_list.index(note.duration.quarterLengthNoTuplets)
 
 def createNetworkInput(notes):
+    logging.debug("Creating array")
     network_input = []
+    logging.debug(f"Length of notes: {len(notes)}")
     for element in notes:
         durationInt = getDurationAsInt(element)
+        logging.debug(f"Duration as Int: {durationInt}")
         if durationInt == None:
             break
         if element.isRest:
             network_input.append([noteToInt(element.name), durationInt])
         elif element.isNote:
             network_input.append([noteToInt(element.nameWithOctave), durationInt])
+
+    logging.debug(f"createNetworkInput returns: {network_input}")
     return network_input
 
 def getNotes(midi):
-    part = midi.notes
-#     part = midi.__dict__["_elements"][0].__dict__["_elements"]
-    return [element for element in part if isinstance(element, note.GeneralNote)]
+    logging.debug("Getting notes")
+    # notes = midi.notes
+    # logging.debug(f"Length of midi.notes: {len(midi.notes)}")
+    logging.debug(f'_elements: {midi.__dict__["_elements"]}')
+    notes = midi.__dict__["_elements"]
+    logging.debug(f"Length of GeneralNotes: {len([element for element in notes if isinstance(element, note.GeneralNote)])}")
+    return [element for element in notes if isinstance(element, note.GeneralNote)]
 
 def getNotesFromPart(part):
     partElements = midi.__dict__["_elements"]
