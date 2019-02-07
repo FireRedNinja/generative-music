@@ -163,7 +163,10 @@ def getData(input_filepath, seq_len, prediction_seq_len):
 
         x_data, y_data = createXY(np.load(file), seq_len, prediction_seq_len)
     #     print(x_data.ndim)
+        if x_data == [] or y_data == []:
+            continue
         if x_data.ndim == 3:
+
             x_note += list(x_data[:,:,0])
             x_len += list(x_data[:,:,1])
             y_note += list(y_data[:,:,0])
@@ -174,6 +177,7 @@ def getData(input_filepath, seq_len, prediction_seq_len):
 
 '''
 createXY
+    gets sequences of data
 inputs:
     np array of notes and duration
     network input sequence length
@@ -192,10 +196,12 @@ def createXY(arr, sequenceLength, predictionLength):
         y.append(arr[i+sequenceLength : i+sequenceLength+predictionLength])
         i += sequenceLength
 
-    return (np.array(x), np.array(y))
+    np.random.seed(1)
+    np.random.shuffle(x)
+    np.random.seed(1)
+    np.random.shuffle(y)
 
-def shuffle(arr):
-    return np.random.shuffle(arr)
+    return (np.array(x), np.array(y))
 
 
 
