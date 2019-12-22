@@ -1,7 +1,6 @@
 import glob
 import numpy as np
 from time import time
-import h5py
 from datetime import datetime
 from pprint import pprint
 from collections import deque
